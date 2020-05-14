@@ -23,9 +23,17 @@ $(function() {
     //     return (person.rate >= 65) && (person.rate <= 90); // In range returns true
     // };
 
-    // filter the people array
+
+    // filter the people array with 'filter' method
     var results = [];
-    results = people.filter(person => { return person.rate >= 65 && person.rate <= 90 });
+    // results = people.filter(person => { return person.rate >= 65 && person.rate <= 90 });
+
+    // the 'foreach' method to filter the data put them into the results
+    people.forEach(person => {
+        if (person.rate >= 65 && person.rate <= 90) {
+            results.push(person);
+        }
+    });
 
     // loop through new array and add matching people to the table
     var $table = $('<tbody></tbody>');
