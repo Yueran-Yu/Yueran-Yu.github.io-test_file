@@ -41,3 +41,17 @@ let even = arr.filter(v => v % 2 == 0);
 console.log(`even : ${even}`);
 let double1 = arr.map(d => d * 2);
 console.log(`double : ${double1}`);
+
+var total = values.reduce((a, b) => a + b, 0);
+
+
+// always wrap the object in parentheses;
+// create a new empty object for each puppy to play with
+var chewToys = puppies.map(puppy => {}); // BUG
+var chewToys = puppies.map(puppy => ({})); // BUG
+// this is because  an empty object{} and empty block{} look exactly the same
+// in ES6 is that { immediately following an arrow is always treated as the start
+// of a block, never the start of an object.
+// so wrapping object literals in parentheses is the only trick you need to remember.
+
+// arrow function do not have their own this value
