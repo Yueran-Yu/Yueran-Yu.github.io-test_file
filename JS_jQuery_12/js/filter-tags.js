@@ -32,8 +32,11 @@
     }).appendTo($buttons); // Add to buttons
 
 
-    $.each(tagged, function(tagName) { // For each tag name
-        $('<button/>', { // Create empty button
+    // can be used to seamlessly iterate over both objects and arrays
+    // 循环tagped ，造出一排buttons, button 的 text 就是 tagged里面的 index
+    // 然后这 每一个button 都有一个 click 事件
+    $.each(tagged, tagName => { // For each tag name
+        $('<button/>', {
             text: tagName + ' (' + tagged[tagName].length + ')', // Add tag name
             click: function() { // Add click handler
                 $(this) // The button clicked on
@@ -46,5 +49,9 @@
                     .show(); // Show just those images
             }
         }).appendTo($buttons); // Add to the buttons
+    });
+
+    $.each(tagged, function(tagName) {
+        alert(tagName);
     });
 }());
