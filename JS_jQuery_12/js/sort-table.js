@@ -30,7 +30,6 @@ var compare = {
     }
 };
 
-
 $('.sortable').each(function() {
     $table = $(this);
     $tbody = $table.find('tbody');
