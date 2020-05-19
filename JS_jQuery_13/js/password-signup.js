@@ -1,3 +1,15 @@
+(function() {
+    let password = $('#password');
+    let passwordConfirm = $('#conf-password');
+
+
+    function setErrorHighlighter(target) {
+        if (target.val().length < 8) {
+            target.addClass();
+        }
+    }
+})();
+
 // (function () {
 //   var password = document.getElementById('password'); // Store password inputs
 //   var passwordConfirm = document.getElementById('conf-password');

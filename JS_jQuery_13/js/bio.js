@@ -29,6 +29,8 @@
     });
 })();
 
+
+
 // (function () {
 //   var bio = $('#bio');
 //   var bioCounter = $('#bio-count');
@@ -64,5 +66,4 @@
 //     bioCounter.addClass(status);
 //     bioCounter.text(count);
 //   }
-
 // }());

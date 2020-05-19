@@ -1,3 +1,13 @@
+(function() {
+    let $birth = $('#birthday');
+    let $parentsConsent = $('#parents-consent');
+    let $consentContainer = $('#consent-container');
+
+    //create the date picker using jQuery UI
+    $birth.prop('type', 'text').data('type', 'date').datepicker({ dateFormat: 'yy-mm-dd' });
+
+})();
+
 // (function () {
 //   var $birth = $('#birthday');                         // D-O-B input
 //   var $parentsConsent = $('#parents-consent');         // Consent checkbox
