@@ -1,14 +1,41 @@
 (function() {
-    let password = $('#password');
-    let passwordConfirm = $('#conf-password');
+    //1 check both length > 8
+    //2 check match
+    let password = document.getElementById('password');
+    let passwordConfirm = document.getElementById('conf-password');
 
-
-    function setErrorHighlighter(target) {
-        if (target.val().length < 8) {
-            target.addClass();
+    function setErrorHighlighter(e) {
+        let target = e.target || e.srcElement;
+        if (target.value.length < 8) {
+            target.className = 'fail';
+        } else {
+            target.className = 'pass';
         }
     }
+
+    function removeErrorHighlighter(e) {
+        let target = e.target || e.srcElement;
+        if (target.className === 'fail') {
+            target.className = '';
+        }
+    }
+
+    function passwordMatch(e) {
+        let target = e.target || e.srcElement;
+        if ((password.value === target.value) && target.value.length >= 8) {
+            target.className = 'pass';
+        } else {
+            target.className = 'fail';
+        }
+    }
+
+    addEvent(password, 'blur', setErrorHighlighter);
+    addEvent(password, 'focus', removeErrorHighlighter);
+    addEvent(passwordConfirm, 'blur', passwordMatch);
+    addEvent(passwordConfirm, 'focus', removeErrorHighlighter);
 })();
+
+
 
 // (function () {
 //   var password = document.getElementById('password'); // Store password inputs
