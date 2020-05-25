@@ -1,0 +1,11 @@
+{
+  "name": "beginning-javascript-practice",
+  "version": "1.1.1",
+  "description": "this is the test when I reading the beginning of javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "nmp run test"
+  },
+  "author": "",
+  "license": "ISC"
+}
