@@ -151,7 +151,7 @@
     // Check that the passwords both match and are 8 characters or more
     function validatePassword() {
         var password = document.getElementById('password');
-        alert("password: :   " + password);
+        // alert("password: :   " + password);
         var valid = password.value.length >= 8;
         if (!valid) {
             setErrorMessage(password, 'Please make sure your password has at least 8 characters');
