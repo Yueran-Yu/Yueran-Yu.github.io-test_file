@@ -23,7 +23,7 @@
         for (i = 0, l = elements.length; i < l; i++) {
             // Next line calls validateRequired() validateTypes()
             isValid = validateRequired(elements[i]) && validateTypes(elements[i]);
-            alert(elements[i] + "Type: " + elements[i].type + "  Name: " + elements[i].name + "  id: " + elements[i].id + "  Value: " + elements[i].value);
+            // alert(elements[i] + "Type: " + elements[i].type + "  Name: " + elements[i].name + "  id: " + elements[i].id + "  Value: " + elements[i].value);
             if (!isValid) { // If it does not pass these two tests
                 showErrorMessage(elements[i]); // Show error messages
             } else { // Otherwise

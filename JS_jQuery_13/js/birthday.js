@@ -10,7 +10,7 @@
 
     $birth.on('blur change', function() {
         var dob = this.value.split('-'); // Array from date
-        alert(dob);
+        // alert(dob);
         // Pass toggleParentsConsent() the date of birth as a date object
         toggleParentsConsent(new Date(dob[0], dob[1] - 1, dob[2]));
     });
