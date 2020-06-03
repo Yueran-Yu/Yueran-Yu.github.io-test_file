@@ -1,15 +1,12 @@
-(function() {
     document.forms.register.noValidate = true;
-
-    //A: when click the submit button, anonymous function will be triggered
     $('form').on('submit', function(e) {
-        let elements = this.elements; // collection of form controls
-        let valid = {}; //custom valid object
-        let isValid; // isValid: checks form controls
-        let isFormValid; //isFormValid: checks entire form
+        var elements = this.elements;
+        var valid = {};
+        var isValid;
+        var isFormValid;
 
-        // perform generic checks (calls functions outside the event handler)
-        for (let i = 0, l = elements.length; i < l; i++) {
+        var i;
+        for (i = 0, l = elements.length; i < l; i++) {
             isValid = validateRequired(elements[i]) && validateTypes(elements[i]);
             if (!isValid) {
                 showErrorMessage(elements[i]);
@@ -17,9 +14,8 @@
                 removeErrorMessage(elements[i]);
             }
             valid[elements[i].id] = isValid;
-
-
         }
+
 
         if (!validateBio()) {
             showErrorMessage(document.getElementById('bio'));
@@ -35,13 +31,14 @@
             removeErrorMessage(document.getElementById('password'));
         }
 
-        if (!validateParentConsent()) {
+        if (!validateParentsConsent()) {
             showErrorMessage(document.getElementById('parents-consent'));
             valid.parentsConsent = false;
         } else {
             removeErrorMessage(document.getElementById('parents-consent'));
         }
-        for (let field in valid) {
+
+        for (var field in valid) {
             if (!valid[field]) {
                 isFormValid = false;
                 break;
@@ -54,8 +51,20 @@
         }
     });
 
+    function validateRequired(el) {
+        if (isRequired(el)) { // Is this element required?
+            var valid = !isEmpty(el); // Is value not empty (true / false)?
+            if (!valid) { // If valid variable holds false
+                setErrorMessage(el, 'Field is required'); // Set the error message
+            }
+            return valid; // Return valid variable (true or false)?
+        }
+        return true; // If not required, all is ok
+    }
+
     function isRequired(el) {
-        return (((typeof el.required === 'boolean') && el.required) || (typeof el.required === 'string'));
+        return ((typeof el.required === 'boolean') && el.required) ||
+            (typeof el.required === 'string');
     }
 
     function isEmpty(el) {
@@ -63,110 +72,93 @@
     }
 
     function validateTypes(el) {
-        if (!el.value) return true;
-
-        let type = $(el).data('type') || el.getAttribute('type');
-        if (typeof validateType[type] === 'function') {
-            return validateType[type](el);
-        } else {
-            return true;
+        if (!el.value) return true; // If element has no value, return true
+        // Otherwise get the value from .data()
+        var type = $(el).data('type') || el.getAttribute('type'); // OR get the type of input
+        if (typeof validateType[type] === 'function') { // Is the type a method of validate object?
+            return validateType[type](el); // If yes, check if the value validates
+        } else { // If not
+            return true; // Return true because it cannot be tested
         }
     }
 
-    //B: functions for generic checks
-    // check if the field is required and if so does it have a value
-    // relies on isRequired() and isEmpty() both show below, and setErrorMessage - shown later.
-    function validateRequired(el) {
-        if (isRequired(el)) {
-            let valid = !isEmpty(el);
-            if (!valid) {
-                setErrorMessage(el, 'Field is required');
-            }
-            return valid;
-        }
-        return true;
-    }
-
-    //C: functions for custom validation
-    function validateParentConsent() {
-        let parentsConsent = document.getElementById('parents-consent');
-        let consentContainer = document.getElementById('consent-container');
-
-        let valid = true;
-        if (consentContainer.className.indexOf('hide') === -1) {
-            valid = parentsConsent.checked;
-            if (!valid) {
+    function validateParentsConsent() {
+        var parentsConsent = document.getElementById('parents-consent');
+        var consentContainer = document.getElementById('consent-container');
+        var valid = true; // Variable: valid set to true
+        if (consentContainer.className.indexOf('hide') === -1) { // If checkbox shown
+            valid = parentsConsent.checked; // Update valid: is it checked/not
+            if (!valid) { // If not, set the error message
                 setErrorMessage(parentsConsent, 'You need your parents\' consent');
             }
         }
-        return valid;
+        return valid; // Return whether valid or not
     }
 
     function validateBio() {
-        let bio = document.getElementById('bio');
-        let valid = bio.value.length <= 140;
+        var bio = document.getElementById('bio');
+        var valid = bio.value.length <= 140;
         if (!valid) {
-            setErrorMessage(bio, 'Please make sure your characters less than 140.');
+            setErrorMessage(bio, 'Please make sure your bio does not exceed 140 characters');
         }
         return valid;
     }
 
     function validatePassword() {
-        let pwd = document.getElementById('password');
-        let valid = pwd.value.length >= 8;
+        var password = document.getElementById('password');
+        var valid = password.value.length >= 8;
         if (!valid) {
-            setErrorMessage(pwd, 'Please make sure your password has at least 8 characters');
+            setErrorMessage(password, 'Please make sure your password has at least 8 characters');
         }
         return valid;
     }
 
-    //D: functions to set / get / show / remove error messages
     function setErrorMessage(el, message) {
-        $(el).date('errorMessage', message);
+        $(el).data('errorMessage', message); // Store error message with element
     }
 
     function getErrorMessage(el) {
-        return $(el).data('errorMessage') || el.title;
+        return $(el).data('errorMessage') || el.title; // Get error message or title of element
     }
 
     function showErrorMessage(el) {
-        let $el = $(el);
-        let errorContainer = $el.siblings('.error.message');
-        if (!errorContainer.length) {
-            errorContainer = $('<span class="error message"></span>').insertAfter($el);
+        var $el = $(el); // The element with the error
+        var $errorContainer = $el.siblings('.error.message'); // Any siblings holding an error message
+
+        if (!$errorContainer.length) { // If no errors exist with the element
+            $errorContainer = $('<span class="error message"></span>').insertAfter($el);
         }
-        errorContainer.text(getErrorMessage(el)); // Add error message
+        $errorContainer.text(getErrorMessage(el)); // Add error message
     }
 
     function removeErrorMessage(el) {
-        let errorContainer = $(el).siglings('.error.message');
-        errorContainer.remove();
+        var errorContainer = $(el).siblings('.error.message'); // Get the sibling of this form control used to hold the error message
+        errorContainer.remove(); // Remove the element that contains the error message
     }
 
-    //E: object for checking types
-    let validateType = {
-        email: function(el) {
-            // checks for a single @ in the email
-            let valid = /[^@]+@[^@]+/.test(el.value);
-            if (!valid) {
-                setErrorMessage(el, 'Please enter a valid email');
+    var validateType = {
+        email: function(el) { // Create email() method
+            var valid = /[^@]+@[^@]+/.test(el.value); // Store result of test in valid
+            if (!valid) { // If the value of valid is not true
+                setErrorMessage(el, 'Please enter a valid email'); // Set error message
             }
-            return valid;
+            return valid; // Return the valid variable
         },
-        number: function(el) {
-            let valid = /^\d+$/.test(el.value);
+        number: function(el) { // Create number() method
+            var valid = /^\d+$/.test(el.value); // Store result of test in valid
             if (!valid) {
                 setErrorMessage(el, 'Please enter a valid number');
             }
             return valid;
         },
-
-        date: function(el) {
-            let valid = /^(\d{2}\/\d{2}\/\d{4})|(\d{4}-\d{2}-\d{2})$/.test(el.value);
-            if (!valid) {
-                setErrorMessage(el, 'Please enter a valid date');
+        date: function(el) { // Create date() method
+            // Store result of test in valid
+            var valid = /^(\d{2}\/\d{2}\/\d{4})|(\d{4}-\d{2}-\d{2})$/.test(el.value);
+            if (!valid) { // If the value of valid is not true
+                setErrorMessage(el, 'Please enter a valid date'); // Set error message
             }
-            return valid;
+            return valid; // Return the valid variable
         }
-    }
-})();
+    };
+
+    }()); // End of IIFE
