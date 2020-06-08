@@ -220,6 +220,7 @@ function renderLists() {
         listElement.dataset.listId = list.id;
 
         // add a class name to the current list item
+        //这个 classList.add()
         listElement.classList.add('list-name');
         listElement.innerText = list.name;
 
