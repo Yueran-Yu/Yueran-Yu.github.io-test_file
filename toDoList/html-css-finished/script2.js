@@ -23,12 +23,12 @@ function createTask(name) {
     }
 }
 
-
-
+//点击这里负责改变 selectedListId
+//用这里最新的 id 和display里面的list比较，就能给那个match的list 添加一个class
 listsContainer.addEventListener('click', e => {
-    let currentList = e.target.tagName.toLowerCase();
-    if (currentList === 'li') {
-        selectedListId = e.target.dataset.listId
+    if (e.target.tagName.toLowerCase() === 'li') {
+        selectedListId = e.target.dataset.listId;
+        saveAndDisplay();
     }
 });
 
@@ -41,24 +41,40 @@ newListForm.addEventListener('submit', e => {
     const listItem = createList(name);
     inputValue.value = null;
     lists.push(listItem);
-    console.log(lists);
     saveAndDisplay();
-
 });
-
-function displayList() {
-    clearElement(listsContainer);
-    lists.forEach(list => {
-        const li = document.createElement('li');
-        li.dataset.listId = list.id;
-        li.classList.add('list-name');
-        li.innerText = list.name;
-        listsContainer.appendChild(li);
-    });
-}
 
 function save() {
     localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists));
+    localStorage.setItem(LOCAL_STORAGE_CURRENT_LIST_ID, selectedListId);
+}
+
+
+function display() {
+    clearElement(listsContainer);
+    displayLists();
+
+
+}
+
+function displayLists() {
+    lists.forEach(list => {
+        const li = document.createElement('li');
+        // 这里设置完ID, 然后下面那步判断 当前list是不是被选中的list
+        li.dataset.listId = list.id;
+        li.classList.add('list-name');
+        li.innerText = list.name;
+
+        // console.log("list.id: ", typeof(list.id));
+        // console.log("selectedListId: ", typeof(selectedListId));
+
+        if (list.id == selectedListId) {
+            // console.log("here is inside");
+            li.classList.add('active-list');
+
+        }
+        listsContainer.appendChild(li);
+    });
 }
 
 function clearElement(element) {
@@ -69,7 +85,7 @@ function clearElement(element) {
 
 function saveAndDisplay() {
     save();
-    displayList();
+    display();
 }
 
-displayList();
+display();

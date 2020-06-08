@@ -39,13 +39,12 @@ let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY);
 listsContainer.addEventListener('click', e => {
     if (e.target.tagName.toLowerCase() === 'li') {
         //set the selectedlistId value to current item id
-        selectedListId = e.target.dataset.listId
-            // after reset the value of selectedListId, when refresh the webpage
-            // the selected value will be changed to the latest selection
-            // 每点击一次，就需要刷新一次， 所以必须在这个 event listener里调用 save 和 render 都是刷新页面的
-            // save function  的功能, 在次强调，是更新local storage的值的
+        selectedListId = e.target.dataset.listId;
+        // after reset the value of selectedListId, when refresh the webpage
+        // the selected value will be changed to the latest selection
+        // 每点击一次，就需要刷新一次， 所以必须在这个 event listener里调用 save 和 render 都是刷新页面的
+        // save function  的功能, 在次强调，是更新local storage的值的
         saveAndRender();
-
     }
 });
 
@@ -78,7 +77,6 @@ clearCompletedTaskButton.addEventListener('click', e => {
     selectedList.tasks = selectedList.tasks.filter(task => !task.complete);
     saveAndRender();
 });
-
 
 
 
@@ -120,8 +118,6 @@ newTaskForm.addEventListener('submit', e => {
     // so that the the new 'li' will be created
     saveAndRender();
 });
-
-
 
 
 function createList(name) {
@@ -211,7 +207,6 @@ function renderTasks(selectedList) {
 }
 
 
-
 function renderLists() {
     lists.forEach(list => {
         const listElement = document.createElement('li');
@@ -225,12 +220,12 @@ function renderLists() {
         listElement.innerText = list.name;
 
         // here to set the effect(bold, white)to the select item
-        if (list.id === selectedListId) {
+
+        if (list.id == selectedListId) {
             listElement.classList.add('active-list');
         }
         listsContainer.appendChild(listElement);
     });
-
 }
 
 function clearElement(element) {

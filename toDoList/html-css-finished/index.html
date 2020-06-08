@@ -26,13 +26,13 @@
 
     <div class="todo-list">
         <div class="todo-header">
-            <h2 class="list-title">YouTube</h2>
-            <p class="task-count">3 tasks remaining</p>
+            <h2 class="list-title" data-list-title>YouTube</h2>
+            <p class="task-count" data-list-count>3 tasks remaining</p>
         </div>
 
         <div class="todo-body">
             <div class="tasks">
-                <div class="task"></div>
+                <div class="task" data-list-display-container></div>
             </div>
 
             <div class="new-task-creator">
@@ -43,8 +43,8 @@
             </div>
 
             <div class="delete-stuff">
-                <button class="btn delete">Clear completed tasks</button>
-                <button class="btn delete">Delete list</button>
+                <button class="btn delete" data-delete-task>Clear completed tasks</button>
+                <button class="btn delete" data-delete-list>Delete list</button>
             </div>
         </div>
     </div>
