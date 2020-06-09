@@ -26,18 +26,16 @@
 
     <div class="todo-list">
         <div class="todo-header">
-            <h2 class="list-title" data-list-title>YouTube</h2>
+            <h2 class="list-title" data-list-title></h2>
             <p class="task-count" data-list-count>3 tasks remaining</p>
         </div>
 
         <div class="todo-body">
-            <div class="tasks">
-                <div class="task" data-list-display-container></div>
-            </div>
+            <div class="tasks" data-tasks-container></div>
 
             <div class="new-task-creator">
-                <form action="">
-                    <input type="text" class="new task" placeholder="new task name" aria-label="new task name" />
+                <form action="" data-new-task>
+                    <input data-task-input type="text" class="new task" placeholder="new task name" aria-label="new task name" />
                     <button class="btn create" aria-label="create new task">+</button>
                 </form>
             </div>
@@ -49,12 +47,13 @@
         </div>
     </div>
 
-    <template>
+    <template id="task-template">
+        <div class="task">
       <input type="checkbox" id="task-1" />
       <label for="task-1">
         <span class="custom-checkbox"></span>
-        record todo list video
       </label>
+      </div>
     </template>
 </body>
 

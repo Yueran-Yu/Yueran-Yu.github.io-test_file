@@ -1,11 +1,21 @@
-const inputValue = document.querySelector('[data-new-list-input]');
+const listName = document.querySelector('[data-new-list-input]');
 const newListForm = document.querySelector('[data-add-list-form]');
 const listsContainer = document.querySelector('[data-task-list]');
+const listTitle = document.querySelector('[data-list-title]');
+const tasksCount = document.querySelector('[data-list-count]');
+const tasksContainer = document.querySelector('[data-tasks-container]');
+const newTaskForm = document.querySelector('[data-new-task]');
+const taskName = document.querySelector('[data-task-input]');
+const taskTemplate = document.getElementById('task-template');
+const deleteListButton = document.querySelector('[data-delete-list]');
+const deleteTaskButton = document.querySelector('[data-delete-task]');
+
 const LOCAL_STORAGE_LIST_KEY = "task.lists";
 const LOCAL_STORAGE_CURRENT_LIST_ID = "tasks.currentList";
 
 let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
-let selectedListId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CURRENT_LIST_ID));
+// let selectedListId = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CURRENT_LIST_ID));
+let selectedListId = localStorage.getItem(LOCAL_STORAGE_CURRENT_LIST_ID);
 
 function createList(name) {
     return {
@@ -23,6 +33,14 @@ function createTask(name) {
     }
 }
 
+deleteListButton.addEventListener('click', e => {
+    if (selectedListId) {
+        lists = lists.filter(list => list.id !== selectedListId);
+        selectedListId = null;
+        saveAndDisplay();
+    }
+});
+
 //点击这里负责改变 selectedListId
 //用这里最新的 id 和display里面的list比较，就能给那个match的list 添加一个class
 listsContainer.addEventListener('click', e => {
@@ -32,16 +50,38 @@ listsContainer.addEventListener('click', e => {
     }
 });
 
+// 这里非常不熟悉！！！！！！！验证checked
+tasksContainer.addEventListener('change', e => {
+    if (e.target.tagName.toLowerCase() === 'input') {
+        const selectedList = lists.find(list => list.id === selectedListId);
+        const selectedTask = selectedList.tasks.find(task => task.id === e.target.id);
+        selectedTask.completed = e.target.checked;
+    }
+});
 
 newListForm.addEventListener('submit', e => {
     e.preventDefault();
-    let name = inputValue.value;
+    let name = listName.value;
     if (name == null || name === '') return;
 
     const listItem = createList(name);
-    inputValue.value = null;
+    listName.value = null;
     lists.push(listItem);
     saveAndDisplay();
+});
+
+newTaskForm.addEventListener('submit', e => {
+    e.preventDefault();
+    let name = taskName.value;
+    if (name == null || name === '') {
+        return;
+    }
+    const taskItem = createTask(name);
+    taskName.value = null;
+    let selectedList = lists.find(list => list.id == selectedListId);
+    selectedList.tasks.push(taskItem);
+    saveAndDisplay();
+
 });
 
 function save() {
@@ -53,8 +93,16 @@ function save() {
 function display() {
     clearElement(listsContainer);
     displayLists();
-
-
+    const selectedList = lists.find(li => li.id == selectedListId);
+    if (selectedList) {
+        tasksContainer.style.display = '';
+        listTitle.innerText = selectedList.name;
+        clearElement(tasksContainer);
+        displayTasksCount(selectedList);
+        displayTasks(selectedList);
+    } else {
+        tasksContainer.style.display = 'none';
+    }
 }
 
 function displayLists() {
@@ -65,15 +113,33 @@ function displayLists() {
         li.classList.add('list-name');
         li.innerText = list.name;
 
-        // console.log("list.id: ", typeof(list.id));
-        // console.log("selectedListId: ", typeof(selectedListId));
-
-        if (list.id == selectedListId) {
-            // console.log("here is inside");
+        if (list.id === selectedListId) {
             li.classList.add('active-list');
-
         }
         listsContainer.appendChild(li);
+    });
+}
+
+
+function displayTasksCount(selectedList) {
+    let remainingTaskslength = selectedList.tasks.filter(task => !task.completed).length;
+    let taskString = remainingTaskslength === 1 ? "task" : "tasks";
+    console.log(remainingTaskslength);
+    tasksCount.innerText = `${remainingTaskslength} ${taskString} remaining`;
+}
+
+function displayTasks(selectedList) {
+    selectedList.tasks.forEach(task => {
+        const taskElement = document.importNode(taskTemplate.content, true);
+        const taskCheckbox = taskElement.querySelector('input');
+        taskCheckbox.id = task.id;
+        taskCheckbox.checked = task.completed;
+
+        //label 会做特殊处理
+        const label = taskElement.querySelector('label');
+        label.htmlFor = task.id;
+        label.append(task.name);
+        tasksContainer.appendChild(taskElement);
     });
 }
 
@@ -89,3 +155,4 @@ function saveAndDisplay() {
 }
 
 display();
+// displayTasksCount();
