@@ -3,6 +3,7 @@ const newListForm = document.querySelector('[data-add-list-form]');
 const listsContainer = document.querySelector('[data-task-list]');
 const listTitle = document.querySelector('[data-list-title]');
 const tasksCount = document.querySelector('[data-list-count]');
+const tasksDisplayBoard = document.querySelector('[data-tasks-board]');
 const tasksContainer = document.querySelector('[data-tasks-container]');
 const newTaskForm = document.querySelector('[data-new-task]');
 const taskName = document.querySelector('[data-task-input]');
@@ -39,6 +40,14 @@ deleteListButton.addEventListener('click', e => {
         selectedListId = null;
         saveAndDisplay();
     }
+});
+
+deleteTaskButton.addEventListener('click', e => {
+    const selectedList = lists.find(list => list.id === selectedListId);
+    //相比于Delete list，这里不需要设置null的值，selectedListId之所以需要设置null，因为需要删除当前list的所有 关联属性，包括active
+    //这里是 给当前selectedList.tasks重新赋值，这样task表展示的就是 未完成的  task
+    selectedList.tasks = selectedList.tasks.filter(task => !task.completed);
+    saveAndDisplay();
 });
 
 //点击这里负责改变 selectedListId
@@ -94,14 +103,14 @@ function display() {
     clearElement(listsContainer);
     displayLists();
     const selectedList = lists.find(li => li.id == selectedListId);
-    if (selectedList) {
-        tasksContainer.style.display = '';
+    if (selectedListId != null) {
+        tasksDisplayBoard.style.display = '';
         listTitle.innerText = selectedList.name;
         clearElement(tasksContainer);
         displayTasksCount(selectedList);
         displayTasks(selectedList);
     } else {
-        tasksContainer.style.display = 'none';
+        tasksDisplayBoard.style.display = 'none';
     }
 }
 
